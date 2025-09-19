@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gradle --version)",
+      "Bash(./gradlew:*)",
+      "mcp__context7__resolve-library-id",
+      "WebSearch",
+      "Bash(find:*)",
+      "Bash(awk:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
