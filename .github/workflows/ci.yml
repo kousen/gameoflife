@@ -7,13 +7,6 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
-permissions:
-  contents: read
-  checks: write
-  actions: write
-  pull-requests: write
-  issues: write
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -48,13 +41,8 @@ jobs:
     - name: Run tests
       run: ./gradlew test --no-daemon
 
-    - name: Generate test report
-      uses: dorny/test-reporter@v1
-      if: (success() || failure()) && github.event_name != 'pull_request'
-      with:
-        name: Test Results
-        path: build/test-results/test/*.xml
-        reporter: java-junit
+    # Test results are available in the build/test-results directory
+    # Remove the test reporter that requires special permissions
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
