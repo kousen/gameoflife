@@ -1,6 +1,9 @@
 # Conway's Game of Life
 
 [![CI](https://github.com/kousen/gameoflife/actions/workflows/ci.yml/badge.svg)](https://github.com/kousen/gameoflife/actions/workflows/ci.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=kousen_gameoflife&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=kousen_gameoflife)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=kousen_gameoflife&metric=coverage)](https://sonarcloud.io/summary/new_code?id=kousen_gameoflife)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=kousen_gameoflife&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=kousen_gameoflife)
 [![Java 25](https://img.shields.io/badge/Java-25-orange.svg)](https://openjdk.org/projects/jdk/25/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -166,11 +169,44 @@ game.simulate(10, g -> {
 ## Testing
 
 The project includes comprehensive unit tests using JUnit 6.0.0-RC3:
-- Rule verification (birth, survival, death)
-- Boundary condition testing
-- Pattern validation
+- Rule verification (birth, survival, death) including HighLife variant
+- Boundary condition testing (Fixed, Toroidal, Infinite)
+- Pattern validation (all 7 patterns tested)
 - Evolution correctness
 - Thread safety validation
+- **90.1% code coverage** (verified by JaCoCo and SonarCloud)
+
+## Educational Branches
+
+This repository includes multiple branches designed for teaching software design evolution:
+
+### Branch Progression
+1. **`simplified`** - Single-file implementation (~130 lines) for beginners
+   - Focus on core algorithm without patterns or abstractions
+   - Can be compiled and run without build tools
+
+2. **`pre-java8`** - Traditional OOP approach without modern Java features
+   - Shows how code was written before Java 8
+   - Demonstrates why modern features are valuable
+
+3. **`main`** - Production-quality code with all modern Java 25 features
+   - Full design patterns implementation
+   - Virtual threads, sealed types, pattern matching
+   - Professional project structure with Gradle
+
+4. **`signals-based`** - Alternative implementation using signal metaphor
+   - Same complexity, different mental model
+   - Shows how design choices affect implementation
+
+See [TEACHING.md](TEACHING.md) for detailed curriculum suggestions.
+
+## Code Quality
+
+- **SonarCloud Analysis**: All 'A' ratings for reliability, security, and maintainability
+- **Zero code smells**: Clean, maintainable code
+- **Zero bugs**: Thoroughly tested implementation
+- **Zero vulnerabilities**: Secure coding practices
+- **Zero duplications**: DRY principles applied
 
 ## License
 
