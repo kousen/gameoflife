@@ -3,6 +3,7 @@ package com.example.gameoflife;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.*;
+import java.util.stream.Collectors;
 
 public class Grid {
     private final int rows;
@@ -83,23 +84,40 @@ public class Grid {
         return new HashSet<>(cells.keySet());
     }
     
+    // Generate signals for a single cell (8 neighbor positions)
+    private List<Cell> generateSignals(Cell cell) {
+        return Direction.getAllNeighbors(cell).stream()
+            .map(neighbor -> boundary.wrap(neighbor, rows, cols))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .toList();
+    }
+
+    // Count signals at each position from all live cells
+    private Map<Cell, Integer> countSignals(Set<Cell> liveCells) {
+        return liveCells.stream()
+            .flatMap(cell -> generateSignals(cell).stream())
+            .collect(Collectors.groupingBy(
+                cell -> cell,
+                Collectors.collectingAndThen(Collectors.counting(), Long::intValue)
+            ));
+    }
+
     public Grid evolveWith(GameRules rules, Executor executor) throws InterruptedException, ExecutionException, TimeoutException {
         var nextGrid = new Grid(rows, cols, boundary);
 
-        // Use a Set to automatically handle duplicates when collecting cells to evaluate
-        Set<Cell> cellsToEvaluate = new HashSet<>();
+        // Count signals from all live cells
+        var signalCounts = countSignals(cells.keySet());
 
-        // Add all live cells and their neighbors (duplicates are automatically handled by Set)
-        for (Cell liveCell : cells.keySet()) {
-            cellsToEvaluate.add(liveCell);
-            cellsToEvaluate.addAll(getNeighbors(liveCell));
-        }
+        // All cells that need evaluation: live cells + cells receiving signals
+        Set<Cell> cellsToEvaluate = new HashSet<>(cells.keySet());
+        cellsToEvaluate.addAll(signalCounts.keySet());
 
         var futures = cellsToEvaluate.stream()
             .map(cell -> CompletableFuture.supplyAsync(() -> {
                 var currentState = getCellState(cell);
-                var liveNeighbors = countLiveNeighbors(cell);
-                var nextState = rules.nextState(currentState, liveNeighbors);
+                var signalCount = signalCounts.getOrDefault(cell, 0);
+                var nextState = rules.nextState(currentState, signalCount);
                 return Map.entry(cell, nextState);
             }, executor))
             .toList();

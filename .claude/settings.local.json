@@ -8,7 +8,10 @@
       "Bash(find:*)",
       "Bash(awk:*)",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Read(//Users/kennethkousen/Documents/Trinity/CPSC403-Senior-Seminar/2025/**)",
+      "Read(//Users/kennethkousen/Downloads/game_of_life_think_functionally/code/exercise/**)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "ask": []

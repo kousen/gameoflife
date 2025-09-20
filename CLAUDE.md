@@ -17,6 +17,34 @@ Conway's Game of Life implementation in Java 25 with modern features and perform
 - **Functional Interfaces**: `GameRules` for pluggable rule systems
 - **Virtual Threads**: Parallel cell evolution via `Executors.newVirtualThreadPerTaskExecutor()`
 
+### Design Patterns Used
+
+#### Creational Patterns
+- **Singleton**: `CellState.ALIVE` and `CellState.DEAD` - single instances prevent memory allocation
+- **Static Factory Methods**:
+  - `Cell.of(row, col)` - more expressive than constructor
+  - `GameRules.conway()` and `GameRules.highLife()` - named constructors
+  - `CellState.fromChar()` and `CellState.fromBoolean()` - conversion factories
+- **Builder Pattern** (implicit): Method chaining in Pattern (e.g., `Pattern.GLIDER.toGrid()`)
+
+#### Behavioral Patterns
+- **Strategy**: `BoundaryCondition` interface with three strategies (Fixed, Toroidal, Infinite)
+- **Strategy**: `GameRules` interface for different rule sets (Conway, HighLife, custom)
+- **Template Method** (subtle): Grid evolution follows template: evaluate cells → apply rules → create new grid
+- **Observer** (simple): `simulate()` method accepts Consumer<GameOfLife> for observation
+- **Command** (functional): Direction enum encapsulates coordinate transformations
+
+#### Structural Patterns
+- **Flyweight**: Reused CellState instances (ALIVE/DEAD) shared across all cells
+- **Facade**: `GameOfLife` class provides simple interface to complex grid evolution
+- **Adapter** (implicit): Pattern adapts string representations to Grid objects
+
+#### Other Patterns
+- **Immutable Object**: Cell, CellState implementations using records
+- **Value Object**: Cell record represents coordinates as values
+- **Null Object** (via Optional): Empty Optional instead of null for invalid cells
+- **Factory Method**: Each BoundaryCondition creates appropriate Optional<Cell>
+
 ### Performance Optimizations
 - **Singleton Cell States**: `CellState.ALIVE` and `CellState.DEAD` to prevent memory allocation
 - **ConcurrentHashMap**: Thread-safe sparse matrix for live cells only
