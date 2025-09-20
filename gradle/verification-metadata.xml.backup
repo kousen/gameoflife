@@ -462,4 +462,10 @@
          </artifact>
       </component>
    </components>
+
+      <component group="gradle" name="gradle" version="9.0.0">
+         <artifact name="gradle-9.0.0-src.zip">
+            <sha256 value="ignore" origin="User trusted"/>
+         </artifact>
+      </component>
 </verification-metadata>

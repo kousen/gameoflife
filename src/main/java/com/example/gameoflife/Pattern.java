@@ -58,17 +58,17 @@ public enum Pattern {
         ............OO......................
         """);
     
-    private final String pattern;
-    
-    Pattern(String pattern) {
-        this.pattern = pattern;
+    private final String template;
+
+    Pattern(String template) {
+        this.template = template;
     }
-    
+
     public Grid toGrid() {
-        return new Grid(pattern);
+        return new Grid(template);
     }
-    
+
     public Grid toGrid(BoundaryCondition boundary) {
-        return new Grid(pattern, boundary);
+        return new Grid(template, boundary);
     }
 }

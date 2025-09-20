@@ -86,12 +86,16 @@ tasks.named<JavaExec>("run") {
 
 // Custom tasks for running specific patterns
 tasks.register<JavaExec>("runBlinker") {
+    group = "application"
+    description = "Run Game of Life with Blinker pattern"
     mainClass.set("com.example.gameoflife.Main")
     classpath = sourceSets["main"].runtimeClasspath
     systemProperty("pattern", "BLINKER")
 }
 
 tasks.register<JavaExec>("runGlider") {
+    group = "application"
+    description = "Run Game of Life with Glider pattern"
     mainClass.set("com.example.gameoflife.Main")
     classpath = sourceSets["main"].runtimeClasspath
     systemProperty("pattern", "GLIDER")
