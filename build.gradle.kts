@@ -1,3 +1,7 @@
+// Dependency verification is enabled via gradle/verification-metadata.xml
+// To update: ./gradlew --write-verification-metadata sha256 build
+// Note: SonarQube plugin brings in transitive JUnit 5.x dependencies
+
 plugins {
     java
     application
