@@ -2,27 +2,26 @@ package com.example.gameoflife;
 
 @FunctionalInterface
 public interface GameRules {
-    CellState nextState(CellState currentState, long liveNeighbors);
-    
+    CellState nextState(CellState currentState, int liveNeighbors);
+
     static GameRules conway() {
         return (currentState, liveNeighbors) -> switch (currentState) {
-            case CellState.Alive ignored1 -> switch ((int) liveNeighbors) {
+            case CellState.Alive _ -> switch (liveNeighbors) {
                 case 2, 3 -> currentState;
-                default -> new CellState.Dead();
+                default -> CellState.DEAD;
             };
-            case CellState.Dead ignored -> liveNeighbors == 3 ?
-                new CellState.Alive() : currentState;
+            case CellState.Dead _ -> liveNeighbors == 3 ? CellState.ALIVE : currentState;
         };
     }
-    
+
     static GameRules highLife() {
         return (currentState, liveNeighbors) -> switch (currentState) {
-            case CellState.Alive ignored1 -> switch ((int) liveNeighbors) {
+            case CellState.Alive _ -> switch (liveNeighbors) {
                 case 2, 3 -> currentState;
-                default -> new CellState.Dead();
+                default -> CellState.DEAD;
             };
-            case CellState.Dead ignored -> switch ((int) liveNeighbors) {
-                case 3, 6 -> new CellState.Alive();
+            case CellState.Dead _ -> switch (liveNeighbors) {
+                case 3, 6 -> CellState.ALIVE;
                 default -> currentState;
             };
         };

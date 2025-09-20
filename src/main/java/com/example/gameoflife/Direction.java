@@ -16,7 +16,7 @@ public enum Direction {
     }
     
     public Cell apply(Cell cell) {
-        return cell.translate(dRow, dCol);
+        return cell.withOffset(dRow, dCol);
     }
     
     public static List<Cell> getAllNeighbors(Cell cell) {

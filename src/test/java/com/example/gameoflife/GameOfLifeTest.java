@@ -78,11 +78,11 @@ class GameOfLifeTest {
     void gliderMoves() throws Exception {
         var initial = new Grid(10, 10);
         // Place glider at top-left
-        initial.setCellState(Cell.of(1, 2), new CellState.Alive());
-        initial.setCellState(Cell.of(2, 3), new CellState.Alive());
-        initial.setCellState(Cell.of(3, 1), new CellState.Alive());
-        initial.setCellState(Cell.of(3, 2), new CellState.Alive());
-        initial.setCellState(Cell.of(3, 3), new CellState.Alive());
+        initial.setCellState(Cell.of(1, 2), CellState.ALIVE);
+        initial.setCellState(Cell.of(2, 3), CellState.ALIVE);
+        initial.setCellState(Cell.of(3, 1), CellState.ALIVE);
+        initial.setCellState(Cell.of(3, 2), CellState.ALIVE);
+        initial.setCellState(Cell.of(3, 3), CellState.ALIVE);
         
         game = new GameOfLife(initial);
         
@@ -102,7 +102,7 @@ class GameOfLifeTest {
     @DisplayName("Custom rules work correctly")
     void customRules() throws Exception {
         // Create a rule where cells always die
-        GameRules alwaysDie = (state, neighbors) -> new CellState.Dead();
+        GameRules alwaysDie = (_, _) -> CellState.DEAD;
         
         var initial = Pattern.BLOCK.toGrid();
         game = new GameOfLife(initial, alwaysDie);

@@ -72,8 +72,8 @@ public class Grid {
             .toList();
     }
     
-    public long countLiveNeighbors(Cell cell) {
-        return getNeighbors(cell).stream()
+    public int countLiveNeighbors(Cell cell) {
+        return (int) getNeighbors(cell).stream()
             .map(this::getCellState)
             .filter(CellState::isAlive)
             .count();

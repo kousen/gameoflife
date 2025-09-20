@@ -30,7 +30,7 @@ class GridTest {
     @DisplayName("Setting cell state works correctly")
     void setCellState() {
         var cell = Cell.of(2, 3);
-        grid.setCellState(cell, new CellState.Alive());
+        grid.setCellState(cell, CellState.ALIVE);
         
         assertTrue(grid.getCellState(cell).isAlive());
     }
@@ -54,9 +54,9 @@ class GridTest {
     @Test
     @DisplayName("Neighbor counting works for corner cell")
     void cornerCellNeighbors() {
-        grid.setCellState(Cell.of(0, 1), new CellState.Alive());
-        grid.setCellState(Cell.of(1, 0), new CellState.Alive());
-        grid.setCellState(Cell.of(1, 1), new CellState.Alive());
+        grid.setCellState(Cell.of(0, 1), CellState.ALIVE);
+        grid.setCellState(Cell.of(1, 0), CellState.ALIVE);
+        grid.setCellState(Cell.of(1, 1), CellState.ALIVE);
         
         assertEquals(3, grid.countLiveNeighbors(Cell.of(0, 0)));
     }
@@ -65,10 +65,10 @@ class GridTest {
     @DisplayName("Neighbor counting works for center cell")
     void centerCellNeighbors() {
         // Create a cross pattern around center
-        grid.setCellState(Cell.of(1, 2), new CellState.Alive()); // North
-        grid.setCellState(Cell.of(3, 2), new CellState.Alive()); // South
-        grid.setCellState(Cell.of(2, 1), new CellState.Alive()); // West
-        grid.setCellState(Cell.of(2, 3), new CellState.Alive()); // East
+        grid.setCellState(Cell.of(1, 2), CellState.ALIVE); // North
+        grid.setCellState(Cell.of(3, 2), CellState.ALIVE); // South
+        grid.setCellState(Cell.of(2, 1), CellState.ALIVE); // West
+        grid.setCellState(Cell.of(2, 3), CellState.ALIVE); // East
         
         assertEquals(4, grid.countLiveNeighbors(Cell.of(2, 2)));
     }
@@ -79,7 +79,7 @@ class GridTest {
         var toroidalGrid = new Grid(3, 3, new BoundaryCondition.Toroidal());
         
         // Set cell at top-left
-        toroidalGrid.setCellState(Cell.of(0, 0), new CellState.Alive());
+        toroidalGrid.setCellState(Cell.of(0, 0), CellState.ALIVE);
         
         // Check wrapped neighbors
         var neighbors = toroidalGrid.getNeighbors(Cell.of(0, 0));
@@ -100,11 +100,11 @@ class GridTest {
     @Test
     @DisplayName("Grid copy creates independent copy")
     void gridCopyIsIndependent() {
-        grid.setCellState(Cell.of(2, 2), new CellState.Alive());
+        grid.setCellState(Cell.of(2, 2), CellState.ALIVE);
         var copy = grid.copy();
         
         // Modify original
-        grid.setCellState(Cell.of(3, 3), new CellState.Alive());
+        grid.setCellState(Cell.of(3, 3), CellState.ALIVE);
         
         // Copy should not be affected
         assertTrue(copy.getCellState(Cell.of(2, 2)).isAlive());
@@ -117,12 +117,12 @@ class GridTest {
         var grid1 = new Grid(3, 3);
         var grid2 = new Grid(3, 3);
         
-        grid1.setCellState(Cell.of(1, 1), new CellState.Alive());
-        grid2.setCellState(Cell.of(1, 1), new CellState.Alive());
+        grid1.setCellState(Cell.of(1, 1), CellState.ALIVE);
+        grid2.setCellState(Cell.of(1, 1), CellState.ALIVE);
         
         assertEquals(grid1, grid2);
         
-        grid2.setCellState(Cell.of(2, 2), new CellState.Alive());
+        grid2.setCellState(Cell.of(2, 2), CellState.ALIVE);
         assertNotEquals(grid1, grid2);
     }
 }

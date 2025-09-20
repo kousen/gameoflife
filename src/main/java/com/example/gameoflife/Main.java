@@ -18,11 +18,11 @@ public class Main {
             // Example 2: Custom initial configuration
             System.out.println("=== Custom Configuration ===");
             var customGrid = new Grid(8, 8);
-            customGrid.setCellState(Cell.of(2, 3), new CellState.Alive());
-            customGrid.setCellState(Cell.of(3, 3), new CellState.Alive());
-            customGrid.setCellState(Cell.of(4, 3), new CellState.Alive());
-            customGrid.setCellState(Cell.of(4, 2), new CellState.Alive());
-            customGrid.setCellState(Cell.of(3, 1), new CellState.Alive());
+            customGrid.setCellState(Cell.of(2, 3), CellState.ALIVE);
+            customGrid.setCellState(Cell.of(3, 3), CellState.ALIVE);
+            customGrid.setCellState(Cell.of(4, 3), CellState.ALIVE);
+            customGrid.setCellState(Cell.of(4, 2), CellState.ALIVE);
+            customGrid.setCellState(Cell.of(3, 1), CellState.ALIVE);
             
             try (var customGame = new GameOfLife(customGrid)) {
                 for (int i = 0; i < 3; i++) {
@@ -46,9 +46,9 @@ public class Main {
             // Example 4: High Life rules
             System.out.println("=== High Life Rules ===");
             var highLifeGrid = new Grid(10, 10);
-            highLifeGrid.setCellState(Cell.of(4, 4), new CellState.Alive());
-            highLifeGrid.setCellState(Cell.of(4, 5), new CellState.Alive());
-            highLifeGrid.setCellState(Cell.of(4, 6), new CellState.Alive());
+            highLifeGrid.setCellState(Cell.of(4, 4), CellState.ALIVE);
+            highLifeGrid.setCellState(Cell.of(4, 5), CellState.ALIVE);
+            highLifeGrid.setCellState(Cell.of(4, 6), CellState.ALIVE);
             
             try (var highLifeGame = new GameOfLife(highLifeGrid, GameRules.highLife())) {
                 highLifeGame.simulate(3, game -> {

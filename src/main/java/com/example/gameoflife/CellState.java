@@ -13,7 +13,7 @@ public sealed interface CellState permits CellState.Alive, CellState.Dead {
         public char symbol() { return '█'; }
 
         @Override
-        public CellState next(long liveNeighbors) {
+        public CellState next(int liveNeighbors) {
             return (liveNeighbors == 2 || liveNeighbors == 3) ? this : DEAD;
         }
     }
@@ -26,14 +26,14 @@ public sealed interface CellState permits CellState.Alive, CellState.Dead {
         public char symbol() { return '░'; }
 
         @Override
-        public CellState next(long liveNeighbors) {
+        public CellState next(int liveNeighbors) {
             return liveNeighbors == 3 ? ALIVE : this;
         }
     }
 
     boolean isAlive();
     char symbol();
-    CellState next(long liveNeighbors);
+    CellState next(int liveNeighbors);
 
     static CellState fromBoolean(boolean alive) {
         return alive ? ALIVE : DEAD;

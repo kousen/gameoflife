@@ -1,4 +1,4 @@
-# Conway's Game of Life - Java 25 Implementation
+# Conway's Game of Life
 
 A modern, object-oriented implementation of Conway's Game of Life using Java 25 features including virtual threads, pattern matching, sealed types, and text blocks.
 
@@ -23,7 +23,7 @@ A modern, object-oriented implementation of Conway's Game of Life using Java 25 
 ## Project Structure
 
 ```
-gameoflife-java21/
+gameoflife/
 ├── build.gradle.kts                  # Gradle Kotlin DSL configuration
 ├── settings.gradle.kts               # Gradle settings
 ├── README.md                         # This file
@@ -58,7 +58,7 @@ gameoflife-java21/
 
 ```bash
 # Clone or download the project
-cd gameoflife-java21
+cd gameoflife
 
 # Compile the project
 ./gradlew clean build
@@ -129,8 +129,8 @@ var game = new GameOfLife(grid, GameRules.highLife());
 
 // Custom rule implementation
 GameRules customRules = (state, neighbors) -> switch (state) {
-    case CellState.Alive _ -> neighbors == 2 ? state : new CellState.Dead();
-    case CellState.Dead _ -> neighbors == 3 ? new CellState.Alive() : state;
+    case CellState.Alive _ -> neighbors == 2 ? state : CellState.DEAD;
+    case CellState.Dead _ -> neighbors == 3 ? CellState.ALIVE : state;
 };
 ```
 
@@ -170,7 +170,7 @@ The project includes comprehensive unit tests using JUnit 6.0.0-RC3:
 
 ## License
 
-This is an educational implementation for demonstrating Java 25 features and OOP principles.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Future Enhancements
 

@@ -6,7 +6,7 @@ public record Cell(int row, int col) implements Comparable<Cell> {
         return new Cell(row, col);
     }
     
-    public Cell translate(int dRow, int dCol) {
+    public Cell withOffset(int dRow, int dCol) {
         return new Cell(row + dRow, col + dCol);
     }
     

@@ -1,1 +1,1 @@
-rootProject.name = "gameoflife-java21"
+rootProject.name = "gameoflife"
