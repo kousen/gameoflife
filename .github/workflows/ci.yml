@@ -1,0 +1,132 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, signals-based, simplified, pre-java8 ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ '25' ]  # Try Java 25 first
+      fail-fast: false
+
+    name: Test with Java ${{ matrix.java }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up JDK ${{ matrix.java }}
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ matrix.java }}
+        distribution: 'oracle'  # Oracle typically has early access builds
+
+    # Fallback to Zulu or Temurin if Oracle doesn't have Java 25
+    - name: Set up JDK ${{ matrix.java }} (Zulu fallback)
+      if: failure()
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ matrix.java }}
+        distribution: 'zulu'
+
+    - name: Set up JDK 21 (Final fallback)
+      if: failure()
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+
+    - name: Display Java version
+      run: java -version
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v3
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Build with Gradle
+      run: ./gradlew build --no-daemon
+
+    - name: Run tests
+      run: ./gradlew test --no-daemon
+
+    - name: Generate test report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: Test Results
+        path: build/test-results/test/*.xml
+        reporter: java-junit
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results-${{ matrix.java }}
+        path: build/test-results/test/
+        retention-days: 7
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      if: success()
+      with:
+        name: build-artifacts-${{ matrix.java }}
+        path: build/libs/
+        retention-days: 7
+
+  # Special job for the simplified branch which doesn't use Gradle
+  test-simplified:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/simplified'
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'  # Use stable version for simple example
+        distribution: 'temurin'
+
+    - name: Compile SimpleGameOfLife
+      run: javac SimpleGameOfLife.java
+
+    - name: Test SimpleGameOfLife compilation
+      run: java SimpleGameOfLife &
+      timeout-minutes: 1
+      # Just test that it compiles and starts; kill after timeout
+
+  code-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'  # Use stable for analysis
+        distribution: 'temurin'
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v3
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    # Run any linting or style checks if configured
+    # - name: Run checkstyle
+    #   run: ./gradlew checkstyleMain checkstyleTest --no-daemon
+
+    # - name: Run SpotBugs
+    #   run: ./gradlew spotbugsMain spotbugsTest --no-daemon
+
+    - name: Check for dependency updates
+      run: ./gradlew dependencyUpdates --no-daemon || true
+      continue-on-error: true

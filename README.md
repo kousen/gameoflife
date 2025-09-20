@@ -1,5 +1,9 @@
 # Conway's Game of Life
 
+[![CI](https://github.com/kousen/gameoflife/actions/workflows/ci.yml/badge.svg)](https://github.com/kousen/gameoflife/actions/workflows/ci.yml)
+[![Java 25](https://img.shields.io/badge/Java-25-orange.svg)](https://openjdk.org/projects/jdk/25/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A modern, object-oriented implementation of Conway's Game of Life using Java 25 features including virtual threads, pattern matching, sealed types, and text blocks.
 
 ## Features

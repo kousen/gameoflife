@@ -1,0 +1,72 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'  # Use stable for releases
+        distribution: 'temurin'
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v3
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Build with Gradle
+      run: ./gradlew build --no-daemon
+
+    - name: Create distribution
+      run: ./gradlew distZip distTar --no-daemon
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          Conway's Game of Life - Release ${{ github.ref }}
+
+          This release includes:
+          - Full implementation with all design patterns
+          - Support for multiple boundary conditions
+          - Virtual threads for parallelism
+          - Comprehensive test coverage
+
+          See TEACHING.md for educational use.
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Assets (ZIP)
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./build/distributions/gameoflife.zip
+        asset_name: gameoflife-${{ github.ref_name }}.zip
+        asset_content_type: application/zip
+
+    - name: Upload Release Assets (TAR)
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./build/distributions/gameoflife.tar
+        asset_name: gameoflife-${{ github.ref_name }}.tar
+        asset_content_type: application/x-tar
