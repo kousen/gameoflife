@@ -5,6 +5,11 @@ on:
   schedule:
     - cron: '0 2 * * 0'  # Weekly on Sunday at 2 AM
 
+permissions:
+  contents: read
+  checks: write
+  actions: write
+
 jobs:
   test-java25:
     runs-on: ${{ matrix.os }}

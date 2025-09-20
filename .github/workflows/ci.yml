@@ -7,6 +7,13 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  checks: write
+  actions: write
+  pull-requests: write
+  issues: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -43,7 +50,7 @@ jobs:
 
     - name: Generate test report
       uses: dorny/test-reporter@v1
-      if: success() || failure()
+      if: (success() || failure()) && github.event_name != 'pull_request'
       with:
         name: Test Results
         path: build/test-results/test/*.xml
@@ -51,7 +58,7 @@ jobs:
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
-      if: always()
+      if: always() && github.event_name != 'pull_request'
       with:
         name: test-results-${{ matrix.java }}
         path: build/test-results/test/
@@ -59,7 +66,7 @@ jobs:
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
-      if: success()
+      if: success() && github.event_name != 'pull_request'
       with:
         name: build-artifacts-${{ matrix.java }}
         path: build/libs/

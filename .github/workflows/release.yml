@@ -5,6 +5,10 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write  # Need write to create releases
+  actions: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
