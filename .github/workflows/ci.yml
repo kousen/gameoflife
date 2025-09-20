@@ -24,22 +24,7 @@ jobs:
       uses: actions/setup-java@v4
       with:
         java-version: ${{ matrix.java }}
-        distribution: 'oracle'  # Oracle typically has early access builds
-
-    # Fallback to Zulu or Temurin if Oracle doesn't have Java 25
-    - name: Set up JDK ${{ matrix.java }} (Zulu fallback)
-      if: failure()
-      uses: actions/setup-java@v4
-      with:
-        java-version: ${{ matrix.java }}
-        distribution: 'zulu'
-
-    - name: Set up JDK 21 (Final fallback)
-      if: failure()
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
+        distribution: 'oracle'  # Oracle should have Java 25 GA
 
     - name: Display Java version
       run: java -version

@@ -1,4 +1,4 @@
-name: Java 25 Experimental
+name: Java 25 Multi-Platform
 
 on:
   workflow_dispatch:
@@ -18,27 +18,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    # Try to download and set up Java 25 manually
-    - name: Download Java 25 EA (Linux)
-      if: runner.os == 'Linux'
-      run: |
-        # Try to download Java 25 early access from OpenJDK or Oracle
-        # This URL will need to be updated when Java 25 EA is available
-        echo "Attempting to download Java 25 EA..."
-        # wget https://download.java.net/java/early_access/jdk25/XX/GPL/openjdk-25-ea+XX_linux-x64_bin.tar.gz -O openjdk25.tar.gz || true
-        # If download succeeds:
-        # tar -xzf openjdk25.tar.gz
-        # export JAVA_HOME=$PWD/jdk-25
-        # export PATH=$JAVA_HOME/bin:$PATH
-        echo "Java 25 EA not yet available, falling back to Java 21"
-
-    # Fallback to the highest available Java
-    - name: Set up Latest Available JDK
+    - name: Set up Java 25
       uses: actions/setup-java@v4
       with:
-        java-version: '21'  # Update when higher versions are available
-        distribution: 'oracle'
-        check-latest: true
+        java-version: '25'
+        distribution: 'oracle'  # Java 25 GA is now available
 
     - name: Check Java Version
       run: |
