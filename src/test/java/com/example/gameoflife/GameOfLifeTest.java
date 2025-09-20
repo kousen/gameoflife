@@ -133,7 +133,7 @@ class GameOfLifeTest {
 
     @Test
     @DisplayName("HighLife rules work correctly")
-    void highLifeRules() throws Exception {
+    void highLifeRules() {
         // HighLife: Birth on 3 or 6, Survival on 2 or 3
         var rules = GameRules.highLife();
 
