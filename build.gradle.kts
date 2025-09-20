@@ -1,3 +1,7 @@
+// Dependency verification is enabled via gradle/verification-metadata.xml
+// This ensures all dependencies are verified against known checksums
+// Run './gradlew --write-verification-metadata sha256 build' to update
+
 plugins {
     java
     application
