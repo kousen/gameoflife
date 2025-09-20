@@ -1,6 +1,8 @@
-# Conway's Game of Life
+# Conway's Game of Life (Signals-Based Implementation)
 
 A modern, object-oriented implementation of Conway's Game of Life using Java 25 features including virtual threads, pattern matching, sealed types, and text blocks.
+
+> **📡 This branch uses a "signals" metaphor** where live cells broadcast signals to neighbors rather than cells counting their neighbors. See [SIGNALS.md](SIGNALS.md) for a detailed explanation of this approach.
 
 ## Features
 
