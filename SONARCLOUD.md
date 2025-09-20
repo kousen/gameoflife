@@ -16,6 +16,10 @@ This document describes how to integrate SonarCloud for continuous code quality 
 2. Click "+" → "Analyze new project"
 3. Select your GitHub repository
 4. Choose "Set up with GitHub Actions" as the analysis method
+5. **IMPORTANT**: Disable automatic analysis in SonarCloud:
+   - Go to Project Settings → Analysis Method
+   - Turn OFF "Automatic Analysis"
+   - This prevents conflicts with CI-based analysis
 
 ### 2. Configure Repository Secrets
 
@@ -196,16 +200,21 @@ Add quality badges to your README:
 
 ### Common Issues
 
-1. **Java Version Mismatch**: SonarCloud might not support Java 25 yet. Use Java 21 for analysis.
+1. **Duplicate Analysis**: If you see duplicate analyses or conflicts:
+   - Ensure automatic analysis is disabled in SonarCloud settings
+   - Only use CI-based analysis (GitHub Actions)
+   - Check Project Settings → Analysis Method → Automatic Analysis is OFF
 
-2. **Missing Coverage**: Ensure JaCoCo XML reports are generated:
+2. **Java Version Mismatch**: SonarCloud might not support Java 25 yet. Use Java 21 for analysis.
+
+3. **Missing Coverage**: Ensure JaCoCo XML reports are generated:
    ```bash
    ./gradlew clean test jacocoTestReport
    ```
 
-3. **Authentication Failed**: Verify your SONAR_TOKEN is valid and has proper permissions.
+4. **Authentication Failed**: Verify your SONAR_TOKEN is valid and has proper permissions.
 
-4. **Analysis Timeout**: Large projects may timeout. Consider excluding generated code or test files.
+5. **Analysis Timeout**: Large projects may timeout. Consider excluding generated code or test files.
 
 ### Useful Commands
 
