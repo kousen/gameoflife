@@ -1,6 +1,8 @@
 plugins {
     java
     application
+    jacoco
+    id("org.sonarqube") version "6.3.1.5724"
 }
 
 group = "com.example"
@@ -28,6 +30,46 @@ tasks.test {
         events("passed", "skipped", "failed")
         exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
     }
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+jacoco {
+    toolVersion = "0.8.13"
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        csv.required.set(false)
+    }
+}
+
+tasks.jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = "0.70".toBigDecimal()
+            }
+        }
+        rule {
+            element = "CLASS"
+            excludes = listOf(
+                "com.example.gameoflife.Main",
+                "com.example.gameoflife.GameRules"
+            )
+            limit {
+                counter = "LINE"
+                value = "COVEREDRATIO"
+                minimum = "0.70".toBigDecimal()
+            }
+        }
+    }
+}
+
+tasks.check {
+    dependsOn(tasks.jacocoTestCoverageVerification)
 }
 
 application {
@@ -49,4 +91,11 @@ tasks.register<JavaExec>("runGlider") {
     mainClass.set("com.example.gameoflife.Main")
     classpath = sourceSets["main"].runtimeClasspath
     systemProperty("pattern", "GLIDER")
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "kousen_gameoflife")
+        property("sonar.organization", "kousen-it-inc")
+    }
 }
