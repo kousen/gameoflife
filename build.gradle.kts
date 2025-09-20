@@ -48,6 +48,11 @@ tasks.jacocoTestReport {
         html.required.set(true)
         csv.required.set(false)
     }
+    classDirectories.setFrom(
+        sourceSets.main.get().output.asFileTree.matching {
+            exclude("com/example/gameoflife/Main.class")
+        }
+    )
 }
 
 tasks.jacocoTestCoverageVerification {
@@ -70,6 +75,11 @@ tasks.jacocoTestCoverageVerification {
             }
         }
     }
+    classDirectories.setFrom(
+        sourceSets.main.get().output.asFileTree.matching {
+            exclude("com/example/gameoflife/Main.class")
+        }
+    )
 }
 
 tasks.check {

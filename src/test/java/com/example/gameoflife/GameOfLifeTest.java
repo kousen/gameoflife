@@ -122,12 +122,35 @@ class GameOfLifeTest {
     void simulationWithObserver() throws Exception {
         var grid = new Grid(3, 3);
         game = new GameOfLife(grid);
-        
+
         var generations = new java.util.ArrayList<Integer>();
-        
+
         game.simulate(5, g -> generations.add(g.getGeneration()));
-        
+
         assertEquals(6, generations.size()); // 0 through 5
         assertEquals(java.util.List.of(0, 1, 2, 3, 4, 5), generations);
+    }
+
+    @Test
+    @DisplayName("HighLife rules work correctly")
+    void highLifeRules() throws Exception {
+        // HighLife: Birth on 3 or 6, Survival on 2 or 3
+        var rules = GameRules.highLife();
+
+        // Test birth on 3 neighbors (same as Conway)
+        assertEquals(CellState.ALIVE, rules.nextState(CellState.DEAD, 3));
+
+        // Test birth on 6 neighbors (different from Conway)
+        assertEquals(CellState.ALIVE, rules.nextState(CellState.DEAD, 6));
+
+        // Test survival on 2 or 3 (same as Conway)
+        assertEquals(CellState.ALIVE, rules.nextState(CellState.ALIVE, 2));
+        assertEquals(CellState.ALIVE, rules.nextState(CellState.ALIVE, 3));
+
+        // Test death scenarios
+        assertEquals(CellState.DEAD, rules.nextState(CellState.ALIVE, 1));
+        assertEquals(CellState.DEAD, rules.nextState(CellState.ALIVE, 4));
+        assertEquals(CellState.DEAD, rules.nextState(CellState.DEAD, 2));
+        assertEquals(CellState.DEAD, rules.nextState(CellState.DEAD, 5));
     }
 }
