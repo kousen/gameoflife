@@ -60,8 +60,8 @@ tasks.jacocoTestCoverageVerification {
         rule {
             element = "CLASS"
             excludes = listOf(
-                "com.example.gameoflife.Main",
-                "com.example.gameoflife.GameRules"
+                "com.example.gameoflife.Main",     // Demo CLI excluded
+                "com.example.gameoflife.GameRules"  // Lambda utilities
             )
             limit {
                 counter = "LINE"
@@ -101,5 +101,12 @@ sonar {
     properties {
         property("sonar.projectKey", "kousen_gameoflife")
         property("sonar.organization", "kousen-it-inc")
+
+        // Exclusions - Main.java is a demo CLI with intentional println usage for teaching
+        property("sonar.exclusions", "**/Main.java")
+        property("sonar.coverage.exclusions", "**/Main.java")
+
+        // Coverage reporting
+        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
     }
 }
