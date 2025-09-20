@@ -83,7 +83,7 @@ public class Grid {
         return new HashSet<>(cells.keySet());
     }
     
-    public Grid evolveWith(GameRules rules, Executor executor) throws InterruptedException, ExecutionException, TimeoutException {
+    public Grid evolveWith(GameRulesBase rules, Executor executor) throws InterruptedException, ExecutionException, TimeoutException {
         var nextGrid = new Grid(rows, cols, boundary);
 
         // Use a Set to automatically handle duplicates when collecting cells to evaluate

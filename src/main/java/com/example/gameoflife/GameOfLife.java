@@ -6,15 +6,15 @@ import java.util.function.Consumer;
 
 public class GameOfLife implements AutoCloseable {
     private Grid currentGrid;
-    private final GameRules rules;
+    private final GameRulesBase rules;
     private final ExecutorService executor;
     private int generation;
-    
+
     public GameOfLife(Grid initialGrid) {
-        this(initialGrid, GameRules.conway());
+        this(initialGrid, GameRulesBase.conway());
     }
-    
-    public GameOfLife(Grid initialGrid, GameRules rules) {
+
+    public GameOfLife(Grid initialGrid, GameRulesBase rules) {
         this.currentGrid = Objects.requireNonNull(initialGrid, "Initial grid cannot be null").copy();
         this.rules = Objects.requireNonNull(rules, "Game rules cannot be null");
         this.executor = Executors.newVirtualThreadPerTaskExecutor();
