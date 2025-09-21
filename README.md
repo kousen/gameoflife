@@ -19,6 +19,23 @@ A modern, object-oriented implementation of Conway's Game of Life using Java 25 
 - **Custom Patterns**: Load patterns from text strings
 - **Parallel Evolution**: Uses virtual threads for efficient multi-core processing
 
+### Conway's Rules Visualization
+
+```mermaid
+flowchart LR
+    subgraph Rules["Conway's Rules (B3/S23)"]
+        Dead["Dead Cell"]
+        Alive["Alive Cell"]
+
+        Dead -->|"3 neighbors"| Birth["Becomes Alive"]
+        Dead -->|"≠3 neighbors"| StayDead["Stays Dead"]
+
+        Alive -->|"2-3 neighbors"| Survive["Stays Alive"]
+        Alive -->|"<2 neighbors"| Underpop["Dies (Underpopulation)"]
+        Alive -->|">3 neighbors"| Overpop["Dies (Overpopulation)"]
+    end
+```
+
 ### Java 25 Features Used
 - **Virtual Threads**: For parallel cell evolution (`Executors.newVirtualThreadPerTaskExecutor()`)
 - **Pattern Matching**: Enhanced switch expressions with pattern matching for sealed types
@@ -106,6 +123,33 @@ try (var game = new GameOfLife(grid)) {
 }
 ```
 
+### Pattern Examples
+
+```mermaid
+graph TD
+    subgraph Blinker["Blinker (Period 2)"]
+        B1["Generation 0<br/>...<br/>OOO<br/>..."]
+        B2["Generation 1<br/>.O.<br/>.O.<br/>.O."]
+        B1 -->|evolve| B2
+        B2 -->|evolve| B1
+    end
+
+    subgraph Glider["Glider (Moves)"]
+        G1["Gen 0<br/>.O.<br/>..O<br/>OOO"]
+        G2["Gen 1<br/>...<br/>O.O<br/>.OO<br/>.O."]
+        G3["Gen 2<br/>...<br/>..O<br/>O.O<br/>.OO"]
+        G4["Gen 3<br/>...<br/>.O.<br/>..OO<br/>.OO"]
+        G1 -->|evolve| G2
+        G2 -->|evolve| G3
+        G3 -->|evolve| G4
+    end
+
+    subgraph Block["Block (Still Life)"]
+        BL["OO<br/>OO"]
+        BL -->|evolve| BL
+    end
+```
+
 ### Custom Patterns
 
 ```java
@@ -149,6 +193,110 @@ game.simulate(10, g -> {
     System.out.println(g.getCurrentGrid());
     System.out.println("Live cells: " + g.getCurrentGrid().getLiveCells().size());
 });
+```
+
+## Architecture
+
+```mermaid
+classDiagram
+    class GameOfLife {
+        -Grid currentGrid
+        -GameRules rules
+        -ExecutorService executor
+        +evolve()
+        +simulate()
+        +close()
+    }
+
+    class Grid {
+        -int rows
+        -int cols
+        -Map~Cell,CellState~ cells
+        -BoundaryCondition boundary
+        +evolveWith(rules, executor)
+        +countLiveNeighbors(cell)
+        +getNeighbors(cell)
+    }
+
+    class Cell {
+        <<record>>
+        +int row
+        +int col
+        +withOffset(direction)
+    }
+
+    class CellState {
+        <<sealed interface>>
+        +isAlive()
+        +symbol()
+    }
+
+    class Alive {
+        <<record>>
+        +ALIVE: CellState$
+    }
+
+    class Dead {
+        <<record>>
+        +DEAD: CellState$
+    }
+
+    class BoundaryCondition {
+        <<sealed interface>>
+        +wrap(cell, rows, cols)
+    }
+
+    class GameRules {
+        <<functional interface>>
+        +nextState(current, neighbors)
+    }
+
+    class Pattern {
+        <<enum>>
+        +BLINKER
+        +GLIDER
+        +BLOCK
+        +toGrid()
+    }
+
+    GameOfLife --> Grid
+    GameOfLife --> GameRules
+    Grid --> Cell
+    Grid --> CellState
+    Grid --> BoundaryCondition
+    CellState <|.. Alive
+    CellState <|.. Dead
+    Pattern --> Grid
+```
+
+### Evolution Flow
+
+```mermaid
+flowchart TB
+    Start([Start Evolution])
+
+    GetLive[Get all live cells]
+    GetNeighbors[For each live cell,<br/>get its neighbors]
+    Collect[Collect cells to evaluate:<br/>live cells + their neighbors]
+
+    subgraph Parallel["Parallel Evaluation (Virtual Threads)"]
+        Eval1[Evaluate Cell 1]
+        Eval2[Evaluate Cell 2]
+        Eval3[Evaluate Cell N]
+    end
+
+    Apply[Apply game rules to<br/>each cell based on<br/>neighbor count]
+    NewGrid[Create new grid<br/>with updated states]
+
+    End([Evolution Complete])
+
+    Start --> GetLive
+    GetLive --> GetNeighbors
+    GetNeighbors --> Collect
+    Collect --> Parallel
+    Parallel --> Apply
+    Apply --> NewGrid
+    NewGrid --> End
 ```
 
 ## Design Patterns Used
